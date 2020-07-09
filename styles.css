@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+}
+
+.page_header {
+  width: 100vw;
+  height: 16.5vh;
+  line-height: 16.5vh;
+  text-align: center;
+  font-size: 50px;
+  box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 10;
+  background-color: #4c061d;
+  color: #fff;
+}
+
+.page_content {
+  display: flex;
+  height: 75.25vh;
+  width: 100vw;
+}
+
+.page_side {
+  flex: 1;
+  background-color: #c3b299;
+}
+
+.game {
+  flex: 5;
+  position: relative;
+  z-index: 9;
+  max-width: 900px;
+  box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
+  background-image: url("./Assets/paper_texture.jpg");
+}
+
+.page_footer {
+  height: 8.25vh;
+  width: 100vw;
+  text-align: center;
+  line-height: 8.25vh;
+  background-color: #b49e7e;
+  color: #fff;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0px -1px 5px 5px rgba(0, 0, 0, 0.25);
+}
