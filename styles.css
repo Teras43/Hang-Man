@@ -45,6 +45,29 @@ body {
   z-index: 6;
 }
 
+.game_container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.game_containter_section {
+  height: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game_button {
+  width: 200px;
+  height: 60px;
+  position: relative;
+  z-index: 7;
+}
+
 .page_footer {
   height: 8.25vh;
   width: 100vw;
