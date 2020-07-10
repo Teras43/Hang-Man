@@ -15,3 +15,30 @@ const testWords = {
     "Video Games": { hint: "A game you play in a visual way, usually on a TV or monitor."},
     "Phone": { hint: "Pocket computer."}
 }
+
+// General Variables
+let gameStarted = false
+const gameImages = {
+    defaultBackground: "./Assets/game_background.png",
+    strike1: "./Assets/game_background1.png",
+    strike2: "./Assets/game_background2.png",
+    strike3: "./Assets/game_background3.png",
+    strike4: "./Assets/game_background4.png",
+    strike5: "./Assets/game_background5.png",
+    strike6: "./Assets/game_background6.png",
+
+}
+const gameImage = $("game_background")
+
+// New Game Logic
+const newGameButton = $("#game_button")
+
+function NewGameClickHandler() {
+    if(gameStarted === false) {
+        gameStarted = true
+        newGameButton.hide()
+        gameImage.attr("src", gameImages.defaultBackground)
+    }
+}
+
+newGameButton.click(NewGameClickHandler)
