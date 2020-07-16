@@ -69,6 +69,7 @@ body {
   padding-top: 15%;
   line-height: 100%;
   font-size: 75px;
+  letter-spacing: 10px;
 }
 
 .game_button {
@@ -76,6 +77,18 @@ body {
   height: 60px;
   position: relative;
   z-index: 7;
+}
+
+#info_box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0px 30px;
+}
+
+#guess_input, #guess_submit, #restart_game {
+  position: relative;
+  z-index: 9000;
 }
 
 .page_footer {

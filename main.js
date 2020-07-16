@@ -37,8 +37,14 @@ const gameImages = {
   strike5: "./Assets/game_background5.png",
   strike6: "./Assets/game_background6.png",
 };
-const gameImage = $("#game_background");
+const gameImage = $("#game_background")
 const letterBox = $("#letter_box")
+const guessInput = $("#guess_input")
+const guessSubmit = $("#guess_submit")
+let chosenWord
+let wordDisplay
+let incorrectGuesses = 0
+const restartGame = $("#restart_game")
 
 // General Functions
 function getRandomInt(num1, num2) {
@@ -50,7 +56,7 @@ function wordToUnderscores(word) {
     const wordLength = word.length
     let underscoredWord = ""
     for(let current = 0; current < wordLength; current++) {
-        underscoredWord += " _"
+        underscoredWord += "_"
     }
     return underscoredWord
 }
@@ -59,18 +65,21 @@ function wordToUnderscores(word) {
 const newGameButton = $("#game_button");
 
 gameImage.hide()
+guessInput.hide()
+guessSubmit.hide()
+restartGame.hide()
 
 function startNewGame() {
     const words = Object.keys(testWords)
-    const randomWord = words[getRandomInt(0, words.length - 1)]
-    console.log(randomWord)
+    chosenWord = words[getRandomInt(0, words.length - 1)]
+    console.log(chosenWord)
 
-    const hiddenWord = wordToUnderscores(randomWord)
+    const hiddenWord = wordToUnderscores(chosenWord)
 
-    const newDiv = $(`<div class="underscore"></div>`)
-    newDiv.text(hiddenWord)
+    wordDisplay = $(`<div class="underscore"></div>`)
+    wordDisplay.text(hiddenWord)
 
-    letterBox.append(newDiv)
+    letterBox.append(wordDisplay)
 }
 
 function newGameClickHandler() {
@@ -79,7 +88,99 @@ function newGameClickHandler() {
     newGameButton.hide();
     gameImage.attr("src", gameImages.defaultBackground);
     gameImage.show()
+    guessInput.show()
+    guessSubmit.show()
     startNewGame()
   }
 }
+
+// Game Logic
+function findLetterInString(word, letter) {
+  const foundLetterIndexes = []
+  let index = 0
+  let loopBreak = false
+
+  while(loopBreak === false) {
+    const wordSearch = word.indexOf(letter, index)
+    if (wordSearch !== -1) {
+      foundLetterIndexes.push(wordSearch)
+      index = wordSearch + 1
+    } else {
+      loopBreak = true
+    }
+  }
+
+  if (foundLetterIndexes.length > 0) {
+    return foundLetterIndexes
+  }
+
+  return null
+}
+
+function checkIfGameWon() {
+  const foundUnderscores = wordDisplay.text().match(/[_]/)
+  if (!foundUnderscores) {
+    // Game Won
+  }
+}
+
+function letterDisplay(foundPositions, letter) {
+  let newString = wordDisplay.text()
+  console.log(newString)
+  foundPositions.forEach(pos => {
+    const firstPart = newString.substr(0, pos)
+    const lastPart = newString.substr(pos + 1)
+
+    newString = firstPart + letter + lastPart
+  })
+  console.log(newString)
+  wordDisplay.text(newString)
+}
+
+function guessLetter() {
+  const userGuess = guessInput.val().replace(/\s/g, "")
+    // Guess is 1 character
+  if (userGuess.length === 1) {
+    // Guess is A-Z
+    if (userGuess.match(/[a-z]/i)) {
+      const foundPosition = findLetterInString(
+      chosenWord.toUpperCase(),
+      userGuess.toUpperCase()
+      )
+        if (foundPosition !== null) {
+          letterDisplay(foundPosition, userGuess)
+          // Did they win?
+
+        } else {
+          // Didn't find a letter
+          incorrectGuesses = incorrectGuesses + 1
+          if (incorrectGuesses > 5) {
+            // Game Over
+            wordDisplay.text("Game Over")
+            guessInput.hide()
+            guessSubmit.hide()
+            restartGame.show()
+          }
+          gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
+        }
+
+    } else {
+      // Didn't input A-Z
+      console.log("Didn't find A-Z")
+    }
+  } else {
+    // Input more than 1 letter
+    console.log("Input more than 1 letter")
+  }
+}
+
+function restartTheGame() {
+  window.location.reload()
+}
+
+// Events
 newGameButton.click(newGameClickHandler);
+
+guessSubmit.click(guessLetter)
+
+restartGame.click(restartTheGame)
