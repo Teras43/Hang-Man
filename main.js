@@ -83,19 +83,25 @@ restartGame.hide()
 getHint.hide()
 
 function startNewGame() {
-  // const words = Object.keys(testWords)
-  // chosenWord = words[getRandomInt(0, words.length - 1)]
+  // const words = Object.keys(testWords);
+  // chosenWord = words[getRandomInt(0, words.length - 1)];
 
-  $.ajax({url: randomWordAPI, success: (response) => {
-    console.log(response)
-  }})
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", randomWordAPI);
+  xhttp.send();
+  xhttp.onreadystatechange = (response) => {
+    response = response.target;
+    if (response.readyState === 4 && response.status === 200) {
+      chosenWord = JSON.parse(response.response)[0];
 
-  const hiddenWord = wordToUnderscores(chosenWord)
+      const hiddenWord = wordToUnderscores(chosenWord);
 
-  wordDisplay = $(`<div class="underscore"></div>`)
-  wordDisplay.text(hiddenWord)
+      wordDisplay = $(`<div class="underscore"></div>`);
+      wordDisplay.text(hiddenWord);
 
-  letterBox.append(wordDisplay)
+      letterBox.append(wordDisplay);
+    }
+  };
 }
 
 function newGameClickHandler() {
