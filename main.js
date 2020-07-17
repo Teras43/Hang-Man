@@ -2,7 +2,7 @@ const testWords = {
   Test: { hint: "A type of evaluation or assessment." },
   Hanged: { hint: "Attached and swinging from the neck." },
   Man: { hint: "A brother, husband, son, or guy." },
-  Hanging: { hint: "Suspended by arms or other means by something." },
+  Hanging: { hint: "When you are suspended by your arms or by something else." },
   Desk: {
     hint: "A table-like object you can place items on, usually a computer.",
   },
@@ -14,10 +14,10 @@ const testWords = {
     hint: "Color code, usually gives strength and power to your computer.",
   },
   Headset: {
-    hint: "Object that sound comes out of, usually plugged into a computer.",
+    hint: "Object that sound comes out of, usually plugged into a computer and wrapped around your head.",
   },
   Headphones: {
-    hint: "Object that sound comes out of, usually plugged into a phone.",
+    hint: "Object that sound comes out of, usually plugged into a phone and put inside your ears.",
   },
   Vape: { hint: "Replacement of ciggarettes in the recent years, big clouds." },
   "Video Games": {
@@ -25,6 +25,12 @@ const testWords = {
   },
   Phone: { hint: "Pocket computer." },
 };
+
+//API
+const randomWordAPI = "https://random-word-api.herokuapp.com/word?number=1&swear=0"
+const definitionAPIBaseURL = "https://od-api.oxforddictionaries.com/api/v2"
+const appID = "1906d77a"
+const apiKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe"
 
 // General Variables
 let gameStarted = false;
@@ -40,46 +46,56 @@ const gameImages = {
 const gameImage = $("#game_background")
 const letterBox = $("#letter_box")
 const guessInput = $("#guess_input")
-const guessSubmit = $("#guess_submit")
+const getHint = $("#get_hint")
 let chosenWord
 let wordDisplay
 let incorrectGuesses = 0
 const restartGame = $("#restart_game")
+const hintDisplay = $("#hint_display")
+const guessBox = $("#guessBox")
+const infoText = $("#info_text")
 
 // General Functions
 function getRandomInt(num1, num2) {
-    const initialWithDecimals = Math.random() * (num2 - num1 + 1)
-    return Math.floor(initialWithDecimals) + num1
+  const initialWithDecimals = Math.random() * (num2 - num1 + 1)
+  return Math.floor(initialWithDecimals) + num1
 }
 
 function wordToUnderscores(word) {
-    const wordLength = word.length
-    let underscoredWord = ""
-    for(let current = 0; current < wordLength; current++) {
-        underscoredWord += "_"
+  const wordLength = word.length
+  let underscoredWord = ""
+  for (let current = 0; current < wordLength; current++) {
+    if (word[current] === " ") {
+      underscoredWord = underscoredWord + " "
+    } else {
+      underscoredWord += "_"
     }
-    return underscoredWord
+  }
+  return underscoredWord
 }
 
 // New game logic
 const newGameButton = $("#game_button");
 
 gameImage.hide()
-guessInput.hide()
-guessSubmit.hide()
+guessBox.hide()
 restartGame.hide()
+getHint.hide()
 
 function startNewGame() {
-    const words = Object.keys(testWords)
-    chosenWord = words[getRandomInt(0, words.length - 1)]
-    console.log(chosenWord)
+  // const words = Object.keys(testWords)
+  // chosenWord = words[getRandomInt(0, words.length - 1)]
 
-    const hiddenWord = wordToUnderscores(chosenWord)
+  $.ajax({url: randomWordAPI, success: (response) => {
+    console.log(response)
+  }})
 
-    wordDisplay = $(`<div class="underscore"></div>`)
-    wordDisplay.text(hiddenWord)
+  const hiddenWord = wordToUnderscores(chosenWord)
 
-    letterBox.append(wordDisplay)
+  wordDisplay = $(`<div class="underscore"></div>`)
+  wordDisplay.text(hiddenWord)
+
+  letterBox.append(wordDisplay)
 }
 
 function newGameClickHandler() {
@@ -88,8 +104,8 @@ function newGameClickHandler() {
     newGameButton.hide();
     gameImage.attr("src", gameImages.defaultBackground);
     gameImage.show()
-    guessInput.show()
-    guessSubmit.show()
+    guessBox.show()
+    getHint.show()
     startNewGame()
   }
 }
@@ -100,7 +116,7 @@ function findLetterInString(word, letter) {
   let index = 0
   let loopBreak = false
 
-  while(loopBreak === false) {
+  while (loopBreak === false) {
     const wordSearch = word.indexOf(letter, index)
     if (wordSearch !== -1) {
       foundLetterIndexes.push(wordSearch)
@@ -121,52 +137,58 @@ function checkIfGameWon() {
   const foundUnderscores = wordDisplay.text().match(/[_]/)
   if (!foundUnderscores) {
     // Game Won
+    guessBox.hide()
+    getHint.hide()
+    restartGame.show()
+    setTimeout(() => {
+      wordDisplay.text("You Won!")
+    }, 1500)
   }
 }
 
 function letterDisplay(foundPositions, letter) {
   let newString = wordDisplay.text()
-  console.log(newString)
   foundPositions.forEach(pos => {
     const firstPart = newString.substr(0, pos)
     const lastPart = newString.substr(pos + 1)
 
     newString = firstPart + letter + lastPart
   })
-  console.log(newString)
   wordDisplay.text(newString)
 }
 
-function guessLetter() {
-  const userGuess = guessInput.val().replace(/\s/g, "")
-    // Guess is 1 character
-  if (userGuess.length === 1) {
+function guessLetter(input) {
+  // Guess is 1 character
+  if (input.length === 1) {
     // Guess is A-Z
-    if (userGuess.match(/[a-z]/i)) {
+    if (input.match(/[a-z]/i)) {
       const foundPosition = findLetterInString(
-      chosenWord.toUpperCase(),
-      userGuess.toUpperCase()
+        chosenWord.toUpperCase(),
+        input.toUpperCase()
       )
-        if (foundPosition !== null) {
-          letterDisplay(foundPosition, userGuess)
-          // Did they win?
-
-        } else {
-          // Didn't find a letter
-          incorrectGuesses = incorrectGuesses + 1
-          if (incorrectGuesses > 5) {
-            // Game Over
-            wordDisplay.text("Game Over")
-            guessInput.hide()
-            guessSubmit.hide()
-            restartGame.show()
-          }
-          gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
+      if (foundPosition !== null) {
+        letterDisplay(foundPosition, input)
+        // Did they win?
+        checkIfGameWon()
+      } else {
+        // Didn't find a letter
+        incorrectGuesses = incorrectGuesses + 1
+        if (incorrectGuesses > 5) {
+          // Game Over
+          wordDisplay.text("Game Over")
+          guessBox.hide()
+          getHint.hide()
+          restartGame.show()
         }
+        gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
+      }
 
     } else {
       // Didn't input A-Z
-      console.log("Didn't find A-Z")
+      infoText.text("Must be a letter")
+      setTimeout(() => {
+        infoText.text("Guess A Letter!")
+      }, 1500)
     }
   } else {
     // Input more than 1 letter
@@ -174,13 +196,25 @@ function guessLetter() {
   }
 }
 
+function handleKeyDown(event) {
+  const letter = event.key
+  guessLetter(letter)
+  guessInput.val("")
+}
+
 function restartTheGame() {
   window.location.reload()
+}
+
+function displayHints() {
+  hintDisplay.text(testWords[chosenWord].hint)
 }
 
 // Events
 newGameButton.click(newGameClickHandler);
 
-guessSubmit.click(guessLetter)
+guessInput.keydown(handleKeyDown)
+
+getHint.click(displayHints)
 
 restartGame.click(restartTheGame)

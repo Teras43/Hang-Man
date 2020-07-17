@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="./styles.css" rel="stylesheet" />
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
-      crossorigin="anonymous"
-    ></script>
-    <script defer src="./main.js"></script>
-    <title>Hang Man</title>
-  </head>
-  <body>
-    <div class="page_header">Hang Mang</div>
-    <div class="page_content">
-      <div class="page_side"></div>
-      <div class="game">
-        <img id="game_background" src="" />
-        <div class="game_container">
-          <div id="letter_box" class="game_container_section"></div>
-          <div class="game_container_section">
-            <button id="game_button" class="game_button">New Game</button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="./styles.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+  <script defer src="./main.js"></script>
+  <title>Hang Man</title>
+</head>
+
+<body>
+  <div class="page_header">Hang Man</div>
+  <div class="page_content">
+    <div class="page_side">
+      <div class="text">Instructions: <br/></div>
+      <div class="text_sm">
+        Type a letter into the box and it will guess the letter! <br/>
+        Press the Hint button if you get stuck!
+      </div>
+    </div>
+    <div class="game">
+      <img id="game_background" src="" />
+      <div class="game_container">
+        <div id="letter_box" class="game_container_section"></div>
+        <div class="game_container_section">
+          <button id="game_button" class="game_button">New Game</button>
+        </div>
+        <div id="info_box" class="game_container_section">
+          <div id="guessBox" class="container">
+            <div id="info_text" class="text">Guess A Letter!</div>
+            <input autocomplete="off" type="text" id="guess_input" />
           </div>
-          <div id="info_box" class="game_container_section">
-            <input type="text" id="guess_input" placeholder="Guess a letter"/>
-            <button type="button" id="guess_submit">Guess</button>
-            <button type="button" id="restart_game">Restart</button>
-          </div>
+          <button type="button" id="get_hint">Hint</button>
+          <button type="button" id="restart_game">Restart</button>
         </div>
       </div>
-      <div class="page_side"></div>
     </div>
-    <footer class="page_footer">Devitar & Teras &copy;</footer>
-  </body>
+    <div class="page_side">
+      <div id="hint_display"></div>
+    </div>
+  </div>
+  <footer class="page_footer">Devitar & Teras &copy;</footer>
+</body>
+
 </html>
