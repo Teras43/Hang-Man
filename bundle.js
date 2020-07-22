@@ -2,10 +2,8 @@
 const randomWord = require("random-words");
 
 // API
-const randomWordAPI =
-  "https://random-word-api.herokuapp.com/word?number=1&swear=0";
 const definitionAPIBaseURL =
-  "https://od-api.oxforddictionaries.com/api/v2/lemmas/en-gb/";
+  "https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/";
 const appID = "1906d77a";
 const appKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe";
 
@@ -60,23 +58,6 @@ restartGame.hide();
 getHint.hide();
 
 function startNewGame() {
-  // const xhttp = new XMLHttpRequest();
-  // xhttp.open("GET", randomWordAPI);
-  // xhttp.send();
-  // xhttp.onreadystatechange = (serverResponse) => {
-  //   data = serverResponse.target;
-  //   if (data.readyState === 4 && data.status === 200) {
-  //     const responseAsJSON = JSON.parse(data.response);
-  // chosenWord = responseAsJSON[0];
-
-  // const hiddenWord = wordToUnderscores(chosenWord);
-
-  // wordDisplay = $(`<div class="underscores"></div>`);
-  // wordDisplay.text(hiddenWord);
-
-  // letterBox.append(wordDisplay);
-  //   }
-  // };
   chosenWord = randomWord(1)[0];
 
   const hiddenWord = wordToUnderscores(chosenWord);
@@ -197,18 +178,9 @@ function displayHint() {
   xhttp.send();
   xhttp.onreadystatechange = (serverResponse) => {
     console.log(serverResponse.target.response);
-    // data = serverResponse.target;
-    // if (data.readyState === 4 && data.status === 200) {
-    //   const responseAsJSON = JSON.parse(data.response);
-    //   chosenWord = responseAsJSON[0];
-
-    //   const hiddenWord = wordToUnderscores(chosenWord);
-
-    //   wordDisplay = $(`<div class="underscores"></div>`);
-    //   wordDisplay.text(hiddenWord);
-
-    //   letterBox.append(wordDisplay);
-    // }
+    if (serverResponse.target.readyState === 4 && serverResponse.target.status === 200) {
+      hintDisplay.text(serverResponse.target.response.results[0].lexicalEntries.entries.senses.definitions[0])
+    }
   };
 }
 
