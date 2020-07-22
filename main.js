@@ -176,9 +176,15 @@ function displayHint() {
   xhttp.setRequestHeader("app_key", appKey);
   xhttp.send();
   xhttp.onreadystatechange = (serverResponse) => {
-    console.log(serverResponse.target.response);
-    if (serverResponse.target.readyState === 4 && serverResponse.target.status === 200) {
-      hintDisplay.text(serverResponse.target.response.results[0].lexicalEntries.entries.senses.definitions[0])
+    if (
+      serverResponse.target.readyState === 4 &&
+      serverResponse.target.status === 200
+    ) {
+      response = JSON.parse(serverResponse.target.response);
+      hintDisplay.text(
+        response.results[0].lexicalEntries[0].entries[0].senses[0]
+          .definitions[0]
+      );
     }
   };
 }
