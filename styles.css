@@ -1,5 +1,11 @@
 body {
   margin: 0;
+  font-family: "Permanent Marker", cursive;
+}
+
+button,
+input {
+  font-family: "Permanent Marker", cursive;
 }
 
 .page_header {
@@ -24,6 +30,12 @@ body {
 .page_side {
   flex: 1;
   background-color: #c3b299;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25em;
+  padding: 15px;
 }
 
 .game {
@@ -31,6 +43,7 @@ body {
   position: relative;
   z-index: 9;
   max-width: 900px;
+  min-width: 500px;
   box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
   background-image: url("./Assets/paper_texture.jpg");
   background-size: cover;
@@ -54,11 +67,22 @@ body {
   flex-direction: column;
 }
 
-.game_containter_section {
+.game_container_section {
   height: 33%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.underscores {
+  width: 80%;
+  height: 100%;
+  text-align: center;
+  padding-top: 15%;
+  line-height: 100%;
+  font-size: 4rem;
+  letter-spacing: 10px;
+  word-spacing: 100vw;
 }
 
 .game_button {
@@ -66,6 +90,55 @@ body {
   height: 60px;
   position: relative;
   z-index: 7;
+  font-size: 1.5em;
+}
+
+#info_box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0px 30px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text {
+  font-size: 1.5em;
+}
+
+.text_sm {
+  font-size: 0.85em;
+}
+
+#guess_input,
+#restart_game,
+#get_hint {
+  position: relative;
+  z-index: 9000;
+  margin-left: 5px;
+}
+
+#guess_input {
+  height: 38px;
+  width: 100px;
+  font-size: 2em;
+  text-align: center;
+}
+
+#restart_game {
+  width: 160px;
+  height: 55px;
+  font-size: 1.5em;
+}
+
+#get_hint {
+  width: 100px;
+  height: 40px;
+  font-size: 1.25em;
 }
 
 .page_footer {
