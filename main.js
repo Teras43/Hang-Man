@@ -2,7 +2,7 @@ const randomWord = require("random-words");
 
 // API
 const definitionAPIBaseURL =
-  "https://od-api.oxforddictionaries.com/api/v2/lemmas/en-gb/";
+  "https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/";
 const appID = "1906d77a";
 const appKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe";
 
@@ -176,7 +176,16 @@ function displayHint() {
   xhttp.setRequestHeader("app_key", appKey);
   xhttp.send();
   xhttp.onreadystatechange = (serverResponse) => {
-    console.log(serverResponse.target.response);
+    if (
+      serverResponse.target.readyState === 4 &&
+      serverResponse.target.status === 200
+    ) {
+      response = JSON.parse(serverResponse.target.response);
+      hintDisplay.text(
+        response.results[0].lexicalEntries[0].entries[0].senses[0]
+          .definitions[0]
+      );
+    }
   };
 }
 
