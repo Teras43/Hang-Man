@@ -1,36 +1,8 @@
-const testWords = {
-  Test: { hint: "A type of evaluation or assessment." },
-  Hanged: { hint: "Attached and swinging from the neck." },
-  Man: { hint: "A brother, husband, son, or guy." },
-  Hanging: { hint: "When you are suspended by your arms or by something else." },
-  Desk: {
-    hint: "A table-like object you can place items on, usually a computer.",
-  },
-  Monitor: { hint: "A display that is plugged into a computer." },
-  Computer: { hint: "What you're playing this on right now." },
-  Keyboard: { hint: "The object used to type." },
-  Mouse: { hint: "Controller of the pointer on the monitor." },
-  RGB: {
-    hint: "Color code, usually gives strength and power to your computer.",
-  },
-  Headset: {
-    hint: "Object that sound comes out of, usually plugged into a computer and wrapped around your head.",
-  },
-  Headphones: {
-    hint: "Object that sound comes out of, usually plugged into a phone and put inside your ears.",
-  },
-  Vape: { hint: "Replacement of ciggarettes in the recent years, big clouds." },
-  "Video Games": {
-    hint: "A game you play in a visual way, usually on a TV or monitor.",
-  },
-  Phone: { hint: "Pocket computer." },
-};
-
 //API
 const randomWordAPI = "https://random-word-api.herokuapp.com/word?number=1&swear=0"
-const definitionAPIBaseURL = "https://od-api.oxforddictionaries.com/api/v2"
+const definitionAPIBaseURL = "https://od-api.oxforddictionaries.com/api/v2/lemmas/en-gb/"
 const appID = "1906d77a"
-const apiKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe"
+const appKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe"
 
 // General Variables
 let gameStarted = false;
@@ -89,10 +61,11 @@ function startNewGame() {
   const xhttp = new XMLHttpRequest();
   xhttp.open("GET", randomWordAPI);
   xhttp.send();
-  xhttp.onreadystatechange = (response) => {
-    response = response.target;
-    if (response.readyState === 4 && response.status === 200) {
-      chosenWord = JSON.parse(response.response)[0];
+  xhttp.onreadystatechange = (serverResponse) => {
+    data = serverResponse.target;
+    if (data.readyState === 4 && data.status === 200) {
+      const responseAsJSON = JSON.parse(data.response)
+      chosenWord = responseAsJSON[0]
 
       const hiddenWord = wordToUnderscores(chosenWord);
 
@@ -164,42 +137,37 @@ function letterDisplay(foundPositions, letter) {
 }
 
 function guessLetter(input) {
-  // Guess is 1 character
-  if (input.length === 1) {
-    // Guess is A-Z
-    if (input.match(/[a-z]/i)) {
-      const foundPosition = findLetterInString(
-        chosenWord.toUpperCase(),
-        input.toUpperCase()
-      )
-      if (foundPosition !== null) {
-        letterDisplay(foundPosition, input)
-        // Did they win?
-        checkIfGameWon()
-      } else {
-        // Didn't find a letter
-        incorrectGuesses = incorrectGuesses + 1
-        if (incorrectGuesses > 5) {
-          // Game Over
-          wordDisplay.text("Game Over")
-          guessBox.hide()
-          getHint.hide()
-          restartGame.show()
-        }
-        gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
-      }
-
+  // Guess is A-Z
+  if (input.match(/[a-z]/i)) {
+    const foundPosition = findLetterInString(
+      chosenWord.toUpperCase(),
+      input.toUpperCase()
+    )
+    if (foundPosition !== null) {
+      letterDisplay(foundPosition, input)
+      // Did they win?
+      checkIfGameWon()
     } else {
-      // Didn't input A-Z
-      infoText.text("Must be a letter")
-      setTimeout(() => {
-        infoText.text("Guess A Letter!")
-      }, 1500)
+      // Didn't find a letter
+      incorrectGuesses = incorrectGuesses + 1
+      if (incorrectGuesses > 5) {
+        // Game Over
+        wordDisplay.text("Game Over")
+        guessBox.hide()
+        getHint.hide()
+        restartGame.show()
+      }
+      gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
     }
+
   } else {
-    // Input more than 1 letter
-    console.log("Input more than 1 letter")
+    // Didn't input A-Z
+    infoText.text("Must be a letter")
+    setTimeout(() => {
+      infoText.text("Guess A Letter!")
+    }, 1500)
   }
+
 }
 
 function handleKeyDown(event) {
@@ -213,7 +181,28 @@ function restartTheGame() {
 }
 
 function displayHints() {
-  hintDisplay.text(testWords[chosenWord].hint)
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "https://cors-anywhere.herokuapp.com/" + 
+  definitionAPIBaseURL + 
+  chosenWord.toLowerCase());
+  xhttp.setRequestHeader("app_id", appID)
+  xhttp.setRequestHeader("app_key", appKey)
+  xhttp.send();
+  xhttp.onreadystatechange = (serverResponse) => {
+    console.log(serverResponse)
+    // data = serverResponse.target;
+    // if (data.readyState === 4 && data.status === 200) {
+    //   const responseAsJSON = JSON.parse(data.response)
+    //   chosenWord = responseAsJSON[0]
+
+    //   const hiddenWord = wordToUnderscores(chosenWord);
+
+    //   wordDisplay = $(`<div class="underscore"></div>`);
+    //   wordDisplay.text(hiddenWord);
+
+    //   letterBox.append(wordDisplay);
+    // }
+  };
 }
 
 // Events
