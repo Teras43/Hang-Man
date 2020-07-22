@@ -11,6 +11,7 @@ let gameStarted = false;
 let chosenWord;
 let wordDisplay;
 let incorrectGuesses = 0;
+const lettersGuessed = [];
 const gameImages = {
   defaultBackground: "./Assets/game_background.png",
   strike1: "./Assets/game_background1.png",
@@ -127,23 +128,34 @@ function letterDisplay(foundPositions, letter) {
 
 function guessLetter(input) {
   // Guess is a-z
-  if (input.match(/[a-z]/i)) {
-    const foundPosition = findLetterInString(
-      chosenWord.toUpperCase(),
-      input.toUpperCase()
-    );
-    if (foundPosition !== null) {
-      letterDisplay(foundPosition, input);
-      checkIfGameWon();
-    } else {
-      incorrectGuesses = incorrectGuesses + 1;
-      if (incorrectGuesses > 5) {
-        wordDisplay.text("Game Over");
-        guessBox.hide();
-        getHint.hide();
-        restartGame.show();
+  if (input.match(/[a-z]/i) && input !== "Backspace") {
+    if (!lettersGuessed.find((element) => element === input)) {
+      lettersGuessed.push(input)
+      const foundPosition = findLetterInString(
+        chosenWord.toUpperCase(),
+        input.toUpperCase()
+      );
+      if (foundPosition !== null) {
+        letterDisplay(foundPosition, input);
+        checkIfGameWon();
+      } else {
+        incorrectGuesses = incorrectGuesses + 1;
+        if (incorrectGuesses > 5) {
+          guessBox.hide();
+          getHint.hide();
+          restartGame.show();
+          wordDisplay.text(chosenWord)
+          setTimeout(() => {
+            wordDisplay.text("Game Over!");
+          }, 2000);
+        }
+        gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
       }
-      gameImage.attr("src", gameImages[`strike${incorrectGuesses}`]);
+    } else {
+      infoText.text("Already guessed that letter!");
+      setTimeout(() => {
+        infoText.text("Guess a letter!");
+      }, 1500);
     }
   } else {
     infoText.text("Must be a letter!");
