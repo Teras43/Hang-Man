@@ -223,5 +223,5 @@ function displayHint() {
 // Events
 newGameButton.click(newGameClickHandler);
 guessInput.keydown(handleKeyDown);
-// getHint.click(displayHint);
+getHint.click(displayHint);
 restartGame.click(restartTheGame);
