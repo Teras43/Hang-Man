@@ -1,5 +1,5 @@
 const randomWord = require("random-words");
-const $ = require("jquery");
+// const $ = require("jquery");
 
 // API
 const definitionAPIBaseURL =
@@ -176,52 +176,52 @@ function restartTheGame() {
   window.location.reload();
 }
 
-function displayHint() {
-  const request = new Request(definitionAPIBaseURL + chosenWord.toLowerCase(), {
-    method: "GET",
-    headers: {
-      app_id: appID,
-      app_key: appKey,
-      "Access-Control-Allow-Origin": "*",
-    },
-    mode: "no-cors",
-  });
-  fetch(request).then((serverResponse) => {
-    if (
-      serverResponse.target.readyState === 4 &&
-      serverResponse.target.status === 200
-    ) {
-      response = JSON.parse(serverResponse.target.response);
-      hintDisplay.text(
-        response.results[0].lexicalEntries[0].entries[0].senses[0]
-          .definitions[0]
-      );
-    }
-  });
-  // const xhttp = new XMLHttpRequest();
-  // const url = definitionAPIBaseURL + chosenWord.toLowerCase();
-  // console.log(url);
-  // xhttp.open("GET", url);
-  // xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-  // xhttp.setRequestHeader("app_id", appID);
-  // xhttp.setRequestHeader("app_key", appKey);
-  // xhttp.send();
-  // xhttp.onreadystatechange = (serverResponse) => {
-  //   if (
-  //     serverResponse.target.readyState === 4 &&
-  //     serverResponse.target.status === 200
-  //   ) {
-  //     response = JSON.parse(serverResponse.target.response);
-  //     hintDisplay.text(
-  //       response.results[0].lexicalEntries[0].entries[0].senses[0]
-  //         .definitions[0]
-  //     );
-  //   }
-  // };
-}
+// function displayHint() {
+//   const request = new Request(definitionAPIBaseURL + chosenWord.toLowerCase(), {
+//     method: "GET",
+//     headers: {
+//       app_id: appID,
+//       app_key: appKey,
+//       "Access-Control-Allow-Origin": "*",
+//     },
+//     mode: "no-cors",
+//   });
+//   fetch(request).then((serverResponse) => {
+//     if (
+//       serverResponse.target.readyState === 4 &&
+//       serverResponse.target.status === 200
+//     ) {
+//       response = JSON.parse(serverResponse.target.response);
+//       hintDisplay.text(
+//         response.results[0].lexicalEntries[0].entries[0].senses[0]
+//           .definitions[0]
+//       );
+//     }
+//   });
+// const xhttp = new XMLHttpRequest();
+// const url = definitionAPIBaseURL + chosenWord.toLowerCase();
+// console.log(url);
+// xhttp.open("GET", url);
+// xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+// xhttp.setRequestHeader("app_id", appID);
+// xhttp.setRequestHeader("app_key", appKey);
+// xhttp.send();
+// xhttp.onreadystatechange = (serverResponse) => {
+//   if (
+//     serverResponse.target.readyState === 4 &&
+//     serverResponse.target.status === 200
+//   ) {
+//     response = JSON.parse(serverResponse.target.response);
+//     hintDisplay.text(
+//       response.results[0].lexicalEntries[0].entries[0].senses[0]
+//         .definitions[0]
+//     );
+//   }
+// };
+// }
 
 // Events
 newGameButton.click(newGameClickHandler);
 guessInput.keydown(handleKeyDown);
-getHint.click(displayHint);
+// getHint.click(displayHint);
 restartGame.click(restartTheGame);
