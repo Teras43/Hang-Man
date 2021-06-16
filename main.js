@@ -1,4 +1,5 @@
 const randomWord = require("random-words");
+const $ = require("jquery");
 
 // API
 const definitionAPIBaseURL =
@@ -130,7 +131,7 @@ function guessLetter(input) {
   // Guess is a-z
   if (input.match(/[a-z]/i) && input !== "Backspace") {
     if (!lettersGuessed.find((element) => element === input)) {
-      lettersGuessed.push(input)
+      lettersGuessed.push(input);
       const foundPosition = findLetterInString(
         chosenWord.toUpperCase(),
         input.toUpperCase()
@@ -144,7 +145,7 @@ function guessLetter(input) {
           guessBox.hide();
           getHint.hide();
           restartGame.show();
-          wordDisplay.text(chosenWord)
+          wordDisplay.text(chosenWord);
           setTimeout(() => {
             wordDisplay.text("Game Over!");
           }, 2000);
@@ -176,18 +177,16 @@ function restartTheGame() {
 }
 
 function displayHint() {
-  // Hit the dictionary API with the chosen word to get definition
-  const xhttp = new XMLHttpRequest();
-  const url =
-    "https://cors-anywhere.herokuapp.com/" +
-    definitionAPIBaseURL +
-    chosenWord.toLowerCase();
-  console.log(url);
-  xhttp.open("GET", url);
-  xhttp.setRequestHeader("app_id", appID);
-  xhttp.setRequestHeader("app_key", appKey);
-  xhttp.send();
-  xhttp.onreadystatechange = (serverResponse) => {
+  const request = new Request(definitionAPIBaseURL + chosenWord.toLowerCase(), {
+    method: "GET",
+    headers: {
+      app_id: appID,
+      app_key: appKey,
+      "Access-Control-Allow-Origin": "*",
+    },
+    mode: "no-cors",
+  });
+  fetch(request).then((serverResponse) => {
     if (
       serverResponse.target.readyState === 4 &&
       serverResponse.target.status === 200
@@ -198,11 +197,31 @@ function displayHint() {
           .definitions[0]
       );
     }
-  };
+  });
+  // const xhttp = new XMLHttpRequest();
+  // const url = definitionAPIBaseURL + chosenWord.toLowerCase();
+  // console.log(url);
+  // xhttp.open("GET", url);
+  // xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+  // xhttp.setRequestHeader("app_id", appID);
+  // xhttp.setRequestHeader("app_key", appKey);
+  // xhttp.send();
+  // xhttp.onreadystatechange = (serverResponse) => {
+  //   if (
+  //     serverResponse.target.readyState === 4 &&
+  //     serverResponse.target.status === 200
+  //   ) {
+  //     response = JSON.parse(serverResponse.target.response);
+  //     hintDisplay.text(
+  //       response.results[0].lexicalEntries[0].entries[0].senses[0]
+  //         .definitions[0]
+  //     );
+  //   }
+  // };
 }
 
 // Events
 newGameButton.click(newGameClickHandler);
 guessInput.keydown(handleKeyDown);
-getHint.click(displayHint);
+// getHint.click(displayHint);
 restartGame.click(restartTheGame);
