@@ -1,5 +1,5 @@
 const randomWord = require("random-words");
-// const $ = require("jquery");
+const $ = require("jquery");
 
 // API
 const definitionAPIBaseURL =
