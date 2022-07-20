@@ -180,7 +180,7 @@ function displayHint() {
 }
 
 // Events
-newGameButton.click(newGameClickHandler);
-guessInput.keydown(handleKeyDown);
-getHint.click(displayHint);
-restartGame.click(restartTheGame);
+newGameButton.on("click", newGameClickHandler);
+guessInput.on("keydown", handleKeyDown);
+getHint.on("click", displayHint);
+restartGame.on("click", restartTheGame);
