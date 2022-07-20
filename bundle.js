@@ -166,10 +166,17 @@ function guessLetter(input) {
   }
 }
 
-function handleKeyDown(event) {
-  const letter = event.key;
+function handleInput(event) {
+  const letter = event.target.value;
   guessLetter(letter);
-  guessInput.val("");
+  guessInput.val(letter);
+  guessInput[0].disabled = true;
+
+  setTimeout(() => {
+    guessInput[0].disabled = false;
+    guessInput.val("");
+    guessInput.trigger("focus");
+  }, 500);
 }
 
 function restartTheGame() {
@@ -182,7 +189,7 @@ function displayHint() {
 
 // Events
 newGameButton.on("click", newGameClickHandler);
-guessInput.on("keydown", handleKeyDown);
+guessInput.on("input", handleInput);
 getHint.on("click", displayHint);
 restartGame.on("click", restartTheGame);
 

@@ -181,6 +181,7 @@ input {
   .underscores {
     letter-spacing: 10px;
     font-size: 2.5rem;
+    max-width: 100vw;
   }
 }
 
