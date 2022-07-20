@@ -1,15 +1,21 @@
-const randomWord = require("random-words");
 const $ = require("jquery");
 
 // API
-const definitionAPIBaseURL =
-  "https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/";
-const appID = "1906d77a";
-const appKey = "ec9ee4ac0d6277aa1f4a2c907df8aebe";
+let wordData = fetch("https://devitar-api.glitch.me/random-word")
+  .then((response) => response.json())
+  .catch((err) => {
+    console.error(err);
+  });
+// wordData.then((data) => console.log("wordData: ", data));
 
 // General Variables
 let gameStarted = false;
 let chosenWord;
+let wordHint;
+wordData.then((data) => {
+  chosenWord = data.word;
+  wordHint = data.hint;
+});
 let wordDisplay;
 let incorrectGuesses = 0;
 const lettersGuessed = [];
@@ -32,11 +38,6 @@ const guessBox = $("#guess_box");
 const infoText = $("#info_text");
 
 // General Functions
-function getRandomInt(num1, num2) {
-  const initalWithDecimals = Math.random() * (num2 - num1 + 1);
-  return Math.floor(initalWithDecimals) + num1;
-}
-
 function wordToUnderscores(word) {
   const wordLength = word.length;
   let underScoredWord = "";
@@ -59,8 +60,6 @@ restartGame.hide();
 getHint.hide();
 
 function startNewGame() {
-  chosenWord = randomWord(1)[0];
-
   const hiddenWord = wordToUnderscores(chosenWord);
 
   wordDisplay = $(`<div class="underscores"></div>`);
@@ -176,52 +175,12 @@ function restartTheGame() {
   window.location.reload();
 }
 
-// function displayHint() {
-//   const request = new Request(definitionAPIBaseURL + chosenWord.toLowerCase(), {
-//     method: "GET",
-//     headers: {
-//       app_id: appID,
-//       app_key: appKey,
-//       "Access-Control-Allow-Origin": "*",
-//     },
-//     mode: "no-cors",
-//   });
-//   fetch(request).then((serverResponse) => {
-//     if (
-//       serverResponse.target.readyState === 4 &&
-//       serverResponse.target.status === 200
-//     ) {
-//       response = JSON.parse(serverResponse.target.response);
-//       hintDisplay.text(
-//         response.results[0].lexicalEntries[0].entries[0].senses[0]
-//           .definitions[0]
-//       );
-//     }
-//   });
-// const xhttp = new XMLHttpRequest();
-// const url = definitionAPIBaseURL + chosenWord.toLowerCase();
-// console.log(url);
-// xhttp.open("GET", url);
-// xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-// xhttp.setRequestHeader("app_id", appID);
-// xhttp.setRequestHeader("app_key", appKey);
-// xhttp.send();
-// xhttp.onreadystatechange = (serverResponse) => {
-//   if (
-//     serverResponse.target.readyState === 4 &&
-//     serverResponse.target.status === 200
-//   ) {
-//     response = JSON.parse(serverResponse.target.response);
-//     hintDisplay.text(
-//       response.results[0].lexicalEntries[0].entries[0].senses[0]
-//         .definitions[0]
-//     );
-//   }
-// };
-// }
+function displayHint() {
+  hintDisplay.text(wordHint);
+}
 
 // Events
 newGameButton.click(newGameClickHandler);
 guessInput.keydown(handleKeyDown);
-// getHint.click(displayHint);
+getHint.click(displayHint);
 restartGame.click(restartTheGame);
