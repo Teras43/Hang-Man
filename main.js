@@ -155,7 +155,7 @@ function guessLetter(input) {
       infoText.text("Already guessed that letter!");
       setTimeout(() => {
         infoText.text("Guess a letter!");
-      }, 1500);
+      }, 1000);
     }
   } else {
     infoText.text("Must be a letter!");
@@ -169,13 +169,10 @@ function handleInput(event) {
   const letter = event.target.value;
   guessLetter(letter);
   guessInput.val(letter);
-  guessInput[0].disabled = true;
 
   setTimeout(() => {
-    guessInput[0].disabled = false;
     guessInput.val("");
-    guessInput.trigger("focus");
-  }, 500);
+  }, 1000);
 }
 
 function restartTheGame() {
