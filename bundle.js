@@ -162,7 +162,7 @@ function guessLetter(input) {
     infoText.text("Must be a letter!");
     setTimeout(() => {
       infoText.text("Guess a letter!");
-    }, 1500);
+    }, 1000);
   }
 }
 
@@ -170,9 +170,11 @@ function handleInput(event) {
   const letter = event.target.value;
   guessLetter(letter);
   guessInput.val(letter);
+  guessInput[0].setAttribute("readonly", true);
 
   setTimeout(() => {
     guessInput.val("");
+    guessInput[0].removeAttribute("readonly");
   }, 1000);
 }
 
